@@ -1,13 +1,17 @@
-import { useEffect } from "react";
-
-export default function Home() {
-  //API usando modelo SPA (Single Page Application)
-  useEffect(() => {
-    fetch("http://localhost:3333/episodes")
-      .then((response) => response.json())
-      .then((data) => console.log(data));
-  }, []);
-  // Tem o problema de não indexar para os Search Engines, robots e crawlers, pois a forma como fizemos acima está rodando no js do browser, então não virá montado do servidor, logo o robot não enxerga
-
+export default function Home(props) {
+  console.log(props.episodes);
   return <h1>🛸</h1>;
+}
+
+//API usando modelo SSR (Server Side Rendering)
+export async function getServerSideProps() {
+  //quando usamos o método getServerSideProps, o primeiro carregamento é feito pela camada do Next.js (que é o servidor Node.js da nossa aplicação), e não no browser da nossa aplicação. Então se olharmos no terminal onde estamos rodando o Next.js, veremos que os dados foram carregados e são exibidos, mas não são exibidos no console do browser, pois os dados foram carregados na camada de servidor, e não na camada de browser
+  const response = await fetch("http://localhost:3333/episodes");
+  const data = await response.json();
+
+  return {
+    props: {
+      episodes: data,
+    },
+  };
 }
