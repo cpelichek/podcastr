@@ -3,14 +3,15 @@ export default function Home(props) {
   return (
     <>
       <h1>🛸</h1>
-      <p>{JSON.stringify(props.episodes)}</p>
+      {/* <p>{JSON.stringify(props.episodes)}</p> */}
     </>
   );
 }
 
-//API usando modelo SSR (Server Side Rendering)
-export async function getServerSideProps() {
-  //quando usamos o método getServerSideProps, o primeiro carregamento é feito pela camada do Next.js (que é o servidor Node.js da nossa aplicação), e não no browser da nossa aplicação. Então se olharmos no terminal onde estamos rodando o Next.js, veremos que os dados foram carregados e são exibidos, mas não são exibidos no console do browser, pois os dados foram carregados na camada de servidor, e não na camada de browser
+//API usando modelo SSG (Static Site Generation)
+// Assim que o primeiro usuário final acessa essa página, criamos uma versão estática dela, ou seja um html, e servimos ela para todos que a acessarem a partir de então - não importa quantas pessoas acessarem, elas receberão o mesmo conteúdo. Essa estratégia é boa quando não precisamos atualizar o conteúdo a cada instante, logo não queremos sobrecarregar nosso servidor com requisições à página e gastar recursos desnecessariamente, que é um problema da estratégia SSR que testamos antes. Com SSG nossa página será atualizada apenas quando quisermos que o servidor a renderize novamente, pode ser a cada tantos minutos ou até mesmo dias, um intervalo de tempo escolhido por nós para atender nossas necessidades, e nossa página fica muito mais performática.
+export async function getStaticProps() {
+  //trocamos de getServerSideProps
   const response = await fetch("http://localhost:3333/episodes");
   const data = await response.json();
 
@@ -18,5 +19,8 @@ export async function getServerSideProps() {
     props: {
       episodes: data,
     },
+    revalidate: 60 * 60 * 8, //adicionamos ravalidate, que recebe um número em segundos com a frequência com que queremos gerar uma nova versão dessa página
   };
 }
+// O recurso de Static Site Generation só funciona em produção, então precisamos criar uma build do projeto para simular a aplicação rodando em produção: para isso no terminal rodamos os comando yarn build e yarn start, e já no log do yarn build nós podemos verificar se nossa página está sendo gerada usando a estratégia SSG ou não
+// Nós podemos atestar o funcionamento da nossa estratégia em Developer Tools na aba Network, ou ainda no próprio terminal onde estivermos rodando nosso servidor mockado (pelo comando yarn server) pois se ao recarregarmos a página não obtivemos novo input do json-server significa que ele não precisou servir novamente, ou seja a página não precisou fazer uma nova requisição, pois ela já havia sido gerada com os dados inclusos -- resumindo, após a primeira vez que a página é gerada, nenhuma outra requisição foi feita, porque nenhuma outra chamada à API foi feita. Esse é um dos diferenciais do Next.js e um dos maiores avanços na área de front-end dos últimos anos.
