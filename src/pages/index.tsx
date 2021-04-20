@@ -1,6 +1,11 @@
 export default function Home(props) {
   console.log(props.episodes);
-  return <h1>🛸</h1>;
+  return (
+    <>
+      <h1>🛸</h1>
+      <p>{JSON.stringify(props.episodes)}</p>
+    </>
+  );
 }
 
 //API usando modelo SSR (Server Side Rendering)
