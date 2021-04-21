@@ -35,7 +35,7 @@
       }
 
       .episodeDetails {
-        flex: 1;
+        flex: 1; // TODO: o que isso faz exatamente? aparentemente uniformiza a width da caixa onde estão os nossos conteúdos de texto, e por isso não está espremendo a largura das nossas imagens, mas é isso mesmo?
         margin-left: 1rem;
 
         a {
@@ -86,6 +86,30 @@
               ); // TODO: acho que vi outro dia uma forma melhor de fazer isso sem ter de usar transform translate, preciso experimentar
             }
           }
+        }
+      }
+
+      button {
+        position: absolute;
+        right: 2rem;
+        bottom: 2rem;
+
+        width: 2.5rem;
+        height: 2.5rem;
+        background: var(--white);
+        border: 1px solid var(--gray-100);
+        border-radius: 0.675rem;
+        font-size: 0; // reseta o tamanho do botão, use sempre que seu botão só tiver uma imagem dentro (também pode fazer esse hack com line-height que funciona do mesmo jeito)
+
+        transition: filter 0.2s;
+
+        img {
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+
+        &:hover {
+          filter: brightness(0.95);
         }
       }
     }
