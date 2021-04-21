@@ -28,7 +28,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
   // console.log(`Últimos episódios: ${JSON.stringify(latestEpisodes)}`);
   // console.log(`Demais episódios: ${JSON.stringify(allEpisodes)}`);
   return (
-    <div className={styles.homePage}>
+    <div className={styles.homepage}>
       <section className={styles.latestEpisodes}>
         <h2>Últimos episódios 🚀</h2>
         <ul>
@@ -41,6 +41,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                   height={192}
                   src={episode.thumbnail}
                   alt={episode.title}
+                  objectFit="cover"
                 />
 
                 <div className={styles.episodeDetails}>

@@ -1,0 +1,93 @@
+.homepage {
+  padding: 0 4rem;
+  height: calc(
+    100vh - 6.5rem
+  ); // we set the height of our home page to a fixed value, the display viewport height subtracted by the height of our header component, so that this box fill the remaining space on the screen
+  overflow-y: scroll;
+
+  h2 {
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.latestEpisodes {
+  ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+
+    li {
+      background: var(--white);
+      border: 1px solid var(--gray-100);
+      padding: 1.25rem;
+      border-radius: 1.5rem;
+      position: relative;
+
+      display: flex;
+      align-items: center;
+
+      img {
+        width: 6rem;
+        height: 6rem;
+        border-radius: 1rem;
+      }
+
+      .episodeDetails {
+        flex: 1;
+        margin-left: 1rem;
+
+        a {
+          display: block;
+          color: var(--gray-800);
+          font-family: Lexend, sans-serif;
+          font-weight: 600;
+          text-decoration: none;
+          line-height: 1.4rem;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        p {
+          font-size: 0.875rem;
+          margin-top: 0.5rem;
+          max-width: 70%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis; // isso escreve "..." quando temos overflow!
+        }
+
+        span {
+          display: inline-block;
+          margin-top: 0.5rem;
+          font-size: 0.875rem;
+
+          // estavamos usando first-child mas este seletor só funciona se ele for o primeiro elemento dentro do contexto, como temos um <a> e <p> antes deste <span> é mais fácil trocar por last-child, já que sabemos que o segundo <span> é o último elemento dentro do contexto. Ajustes foram feitos conforme apropriado.
+          &:last-child {
+            margin-left: 0.5rem;
+            padding-left: 0.5rem;
+            position: relative;
+
+            &::before {
+              content: "";
+              width: 4px;
+              height: 4px;
+              border-radius: 2px;
+              background: #ddd;
+              position: absolute;
+              left: 0;
+              top: 50%;
+              transform: translate(
+                -50%,
+                -50%
+              ); // TODO: acho que vi outro dia uma forma melhor de fazer isso sem ter de usar transform translate, preciso experimentar
+            }
+          }
+        }
+      }
+    }
+  }
+}
