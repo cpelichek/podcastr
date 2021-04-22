@@ -17,6 +17,7 @@ export function Player() {
     currentEpisodeIndex,
     isPlaying,
     togglePlay,
+    setPlayingState,
   } = useContext(PlayerContext);
 
   // useEffect é uma função de dentro do React que usamos para fazer efeitos colaterais, ou seja, "quando alguma coisa muda eu executo algo"
@@ -80,7 +81,15 @@ export function Player() {
 
         {/* Podemos colocar nossa tag <audio /> em qualquer lugar da nossa aplicação, ela ficará "invisível" no DOM, escolhemos aqui pois assim fica mais próxima dos botões que controlam o que estamos ouvindo */}
         {/* Ao invés de um operador ternário, podemos fazer igual o exemplo abaixo quando queremos que esta à direita aconteça apenas se a expressão à esquerda for truthy, ou seja, avaliado como true no processo de coerção do valor */}
-        {episode && <audio src={episode.url} ref={audioRef} autoPlay />}
+        {episode && (
+          <audio
+            src={episode.url}
+            ref={audioRef}
+            autoPlay
+            onPlay={() => setPlayingState(true)}
+            onPause={() => setPlayingState(false)}
+          />
+        )}
 
         <div className={styles.buttons}>
           <button type="button" disabled={!episode}>
