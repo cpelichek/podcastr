@@ -1,13 +1,18 @@
+// importações de pacotes externos
+import { useContext } from "react";
 import { GetStaticProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
+
+// importações de funções internas
 import { api } from "../services/api";
 import { convertDurationToTimeString } from "../utils/convertDurationToTimeString";
+import { PlayerContext } from "../contexts/PlayerContext";
 
+// importações de css
 import styles from "./home.module.scss";
-import React from "react";
 
 type Episode = {
   id: string;
@@ -28,10 +33,13 @@ type HomeProps = {
 export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
   // console.log(`Últimos episódios: ${JSON.stringify(latestEpisodes)}`);
   // console.log(`Demais episódios: ${JSON.stringify(allEpisodes)}`);
+
+  const { play } = useContext(PlayerContext);
+
   return (
     <div className={styles.homepage}>
       <section className={styles.latestEpisodes}>
-        <h2>Últimos episódios 🚀</h2>
+        <h2>Últimos lançamentos 🚀</h2>
         <ul>
           {latestEpisodes.map((episode) => {
             // nós sempre usamos map para renderizar html repetitivo
@@ -54,7 +62,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                   <span>{episode.durationAsString}</span>
                 </div>
 
-                <button type="button">
+                <button type="button" onClick={() => play(episode)}>
                   <img src="/play-green.svg" alt="Tocar episódio" />
                 </button>
               </li>
