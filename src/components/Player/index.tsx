@@ -9,7 +9,9 @@ import { PlayerContext } from "../../contexts/PlayerContext";
 import styles from "./styles.module.scss";
 
 export function Player() {
-  const { episodeList, currentEpisodeIndex } = useContext(PlayerContext);
+  const { episodeList, currentEpisodeIndex, isPlaying } = useContext(
+    PlayerContext
+  );
 
   const episode = episodeList[currentEpisodeIndex];
 
@@ -54,6 +56,10 @@ export function Player() {
           <span>00:00</span>
         </div>
 
+        {/* Podemos colocar nossa tag <audio /> em qualquer lugar da nossa aplicação, ela ficará "invisível" no DOM, escolhemos aqui pois assim fica mais próxima dos botões que controlam o que estamos ouvindo */}
+        {/* Ao invés de um operador ternário, podemos fazer igual o exemplo abaixo quando queremos que a IIFE à direita aconteça apenas se a expressão à esquerda for truthy, ou seja, avaliado como true no processo de coerção do valor */}
+        {episode && <audio src={episode.url} autoPlay />}
+
         <div className={styles.buttons}>
           <button type="button" disabled={!episode}>
             <img src="/shuffle.svg" alt="Embaralhar" />
@@ -66,7 +72,11 @@ export function Player() {
             className={styles.playButton}
             disabled={!episode}
           >
-            <img src="/play.svg" alt="Tocar" />
+            {isPlaying ? (
+              <img src="/pause.svg" alt="Pausar" />
+            ) : (
+              <img src="/play.svg" alt="Tocar" />
+            )}
           </button>
           <button type="button" disabled={!episode}>
             <img src="/play-next.svg" alt="Tocar próximo" />
