@@ -108,11 +108,26 @@
     border: 0;
     font-size: 0; //serve para resetar o tamanho da font do button, assim quando temos um botão que só tem uma imagem dentro essa imagem irá ficar centralizada, porque por padrão irá tentar alinhar a imagem de acordo com o font-size do botão, então se estiver como 0 ela ficará centralizada
 
+    transition: filter 0.2s;
+
+    &:disabled {
+      // cursor: not-allowed;
+      cursor: default;
+    }
+
+    &:hover:not(:disabled) {
+      filter: brightness(0.7);
+    }
+
     &.playButton {
       width: 4rem;
       height: 4rem;
       border-radius: 1rem;
       background: var(--purple-400);
+
+      &:hover {
+        filter: brightness(0.95);
+      }
     }
   }
 }
