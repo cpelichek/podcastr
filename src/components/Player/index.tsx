@@ -1,10 +1,10 @@
-import { useContext, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import Image from "next/image";
 import Slider from "rc-slider";
 
 import "rc-slider/assets/index.css";
 
-import { PlayerContext } from "../../contexts/PlayerContext";
+import { usePlayer } from "../../contexts/PlayerContext";
 
 import styles from "./styles.module.scss";
 
@@ -16,11 +16,13 @@ export function Player() {
     episodeList,
     currentEpisodeIndex,
     isPlaying,
+    hasPrevious,
+    hasNext,
     togglePlay,
     setPlayingState,
     playNext,
     playPrevious,
-  } = useContext(PlayerContext);
+  } = usePlayer();
 
   // useEffect é uma função de dentro do React que usamos para fazer efeitos colaterais, ou seja, "quando alguma coisa muda eu executo algo"
   useEffect(() => {
@@ -99,8 +101,8 @@ export function Player() {
           </button>
           <button
             type="button"
-            disabled={!episode}
-            onClick={() => playPrevious()}
+            disabled={!episode || !hasPrevious}
+            onClick={playPrevious}
           >
             <img src="/play-previous.svg" alt="Tocar anterior" />
           </button>
@@ -116,7 +118,11 @@ export function Player() {
               <img src="/play.svg" alt="Tocar" />
             )}
           </button>
-          <button type="button" disabled={!episode} onClick={() => playNext()}>
+          <button
+            type="button"
+            disabled={!episode || !hasNext}
+            onClick={playNext}
+          >
             <img src="/play-next.svg" alt="Tocar próximo" />
           </button>
           <button type="button" disabled={!episode}>

@@ -9,6 +9,7 @@ import { api } from "../../services/api";
 import { convertDurationToTimeString } from "../../utils/convertDurationToTimeString";
 
 import styles from "./episode.module.scss";
+import { usePlayer } from "../../contexts/PlayerContext";
 
 /**
  * O Next.js faz automaticamente um roteamento baseado nos arquivos que temos no folder pages, isso recebe o nome de file system rooting, que significa que os arquivos .tsx que não começam com _ presentes na pasta pages são os arquivos que formam as rotas da aplicação
@@ -33,6 +34,8 @@ type EpisodeProps = {
 };
 
 export default function Episode({ episode }: EpisodeProps) {
+  const { play } = usePlayer();
+
   return (
     <div className={styles.episode}>
       <div className={styles.thumbnailContainer}>
@@ -48,7 +51,7 @@ export default function Episode({ episode }: EpisodeProps) {
           src={episode.thumbnail}
           objectFit="cover"
         />
-        <button type="button">
+        <button type="button" onClick={() => play(episode)}>
           <img src="/play.svg" alt="Tocar episódio" />
         </button>
       </div>

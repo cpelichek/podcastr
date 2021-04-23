@@ -1,5 +1,4 @@
 // importações de pacotes externos
-import { useContext } from "react";
 import { GetStaticProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,10 +8,7 @@ import ptBR from "date-fns/locale/pt-BR";
 // importações de funções internas
 import { api } from "../services/api";
 import { convertDurationToTimeString } from "../utils/convertDurationToTimeString";
-import {
-  PlayerContext,
-  PlayerContextProvider,
-} from "../contexts/PlayerContext";
+import { usePlayer } from "../contexts/PlayerContext";
 
 // importações de css
 import styles from "./home.module.scss";
@@ -37,7 +33,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
   // console.log(`Últimos episódios: ${JSON.stringify(latestEpisodes)}`);
   // console.log(`Demais episódios: ${JSON.stringify(allEpisodes)}`);
 
-  const { playList } = useContext(PlayerContext);
+  const { playList } = usePlayer();
 
   const episodeList = [...latestEpisodes, ...allEpisodes]; // nós copiamos as informações anteriores para assim estar de acordo com o "princípio da imutabilidade" do React
 

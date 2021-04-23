@@ -1,6 +1,6 @@
 // Context API é uma funcionalidade do React que permite compartilhar dados entre componentes da nossa aplicação
 // Isso serve para lidar com o desafio de fazer um evento que acontece em um componente (um click em um botão "play", por exemplo) ser ouvido por outro componente (um aúdio começar a tocar)
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 type Episode = {
   title: string;
@@ -14,6 +14,8 @@ type PlayerContextData = {
   episodeList: Episode[];
   currentEpisodeIndex: number;
   isPlaying: boolean;
+  hasPrevious: boolean;
+  hasNext: boolean;
   play: (episode: Episode) => void;
   playList: (list: Episode[], index: number) => void;
   togglePlay: () => void;
@@ -38,37 +40,41 @@ export function PlayerContextProvider({
   const [currentEpisodeIndex, setCurrentEpisodeIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const hasPrevious = currentEpisodeIndex > 0;
+  const hasNext = currentEpisodeIndex + 1 < episodeList.length;
+
   function play(episode) {
+    // método usado dentro da página de conteúdo de um episódio, ou seja, nossas páginas do [slug].tsx
     setEpisodeList([episode]);
     setCurrentEpisodeIndex(0);
     setIsPlaying(true);
   }
 
   function playList(list: Episode[], index: number) {
+    // método usado dentro da página que contém uma playlist, no nosso caso a Home
     setEpisodeList(list);
     setCurrentEpisodeIndex(index);
     setIsPlaying(true);
   }
 
   function togglePlay() {
-    // método usado pelo onClick dos <button> tocar e pausar
+    // método usado pelo listener onClick dos <button> tocar e pausar
     setIsPlaying(!isPlaying);
   }
 
   function setPlayingState(state: boolean) {
-    // método usado pelos onPlay e onPause do <audio>
+    // método usado pelos listener onPlay e onPause do <audio>, que podem ser acessados por atalho de teclado
     setIsPlaying(state);
   }
 
   function playNext() {
-    const nextEpisodeIndex = currentEpisodeIndex + 1;
-    if (nextEpisodeIndex < episodeList.length) {
+    if (hasNext) {
       setCurrentEpisodeIndex(currentEpisodeIndex + 1);
     }
   }
 
   function playPrevious() {
-    if (currentEpisodeIndex > 0) {
+    if (hasPrevious) {
       setCurrentEpisodeIndex(currentEpisodeIndex - 1);
     }
   }
@@ -78,9 +84,11 @@ export function PlayerContextProvider({
       value={{
         episodeList,
         currentEpisodeIndex,
+        isPlaying,
+        hasPrevious,
+        hasNext,
         play,
         playList,
-        isPlaying,
         togglePlay,
         setPlayingState,
         playNext,
@@ -91,3 +99,8 @@ export function PlayerContextProvider({
     </PlayerContext.Provider>
   );
 }
+
+// escrevemos o export abaixo para otimizar a importação do useContext, que vem do React, e do PlayerContext, que é nosso componente
+export const usePlayer = () => {
+  return useContext(PlayerContext);
+};
