@@ -15,8 +15,11 @@ type PlayerContextData = {
   currentEpisodeIndex: number;
   isPlaying: boolean;
   play: (episode: Episode) => void;
+  playList: (list: Episode[], index: number) => void;
   togglePlay: () => void;
   setPlayingState: (state: boolean) => void;
+  playNext: () => void;
+  playPrevious: () => void;
 };
 
 // O valor default definido na chamada da função createContext() não é muito utilizado, serve mais para dar o formato que esperamos receber do value dos componentes envolvidos nesse contexto pelo "NomeDoContexto.Provider", exemplo: createContext({ episodeList: [], currentEpisodeIndex: 0, }) , porém nós usamos o createContext({} as PlayerContextData) que é um hack do typescript que "simula" ou "faz uma atribuição forçada" ao objeto, dizendo que esse {} tem a mesma estrutura que PlayerContextData, fazendo com que o PlayerContext tenha exatamente o formato do PlayerContextData. O bom disso é que quando formos importar os dados de dentro do player, quando fizermos uma desestruturação, exemplo const {  } = useContext(PlayerContext), nós podemos dentro do espaço em  {  } usar o atalho de teclado Ctrl+barraDeEspaço para enxergar o que é esperado dentro do PlayerContextData, no nosso caso episodeList e currentEpisodeIndex.
@@ -41,12 +44,33 @@ export function PlayerContextProvider({
     setIsPlaying(true);
   }
 
+  function playList(list: Episode[], index: number) {
+    setEpisodeList(list);
+    setCurrentEpisodeIndex(index);
+    setIsPlaying(true);
+  }
+
   function togglePlay() {
+    // método usado pelo onClick dos <button> tocar e pausar
     setIsPlaying(!isPlaying);
   }
 
   function setPlayingState(state: boolean) {
+    // método usado pelos onPlay e onPause do <audio>
     setIsPlaying(state);
+  }
+
+  function playNext() {
+    const nextEpisodeIndex = currentEpisodeIndex + 1;
+    if (nextEpisodeIndex < episodeList.length) {
+      setCurrentEpisodeIndex(currentEpisodeIndex + 1);
+    }
+  }
+
+  function playPrevious() {
+    if (currentEpisodeIndex > 0) {
+      setCurrentEpisodeIndex(currentEpisodeIndex - 1);
+    }
   }
 
   return (
@@ -55,9 +79,12 @@ export function PlayerContextProvider({
         episodeList,
         currentEpisodeIndex,
         play,
+        playList,
         isPlaying,
         togglePlay,
         setPlayingState,
+        playNext,
+        playPrevious,
       }}
     >
       {children}
