@@ -24,6 +24,7 @@ type PlayerContextData = {
   toggleLoop: () => void;
   toggleShuffle: () => void;
   setPlayingState: (state: boolean) => void;
+  clearPlayerState: () => void;
   playNext: () => void;
   playPrevious: () => void;
 };
@@ -48,7 +49,7 @@ export function PlayerContextProvider({
   const [isShuffling, setIsShuffling] = useState(false);
 
   const hasPrevious = currentEpisodeIndex > 0;
-  const hasNext = currentEpisodeIndex + 1 < episodeList.length;
+  const hasNext = isShuffling || currentEpisodeIndex + 1 < episodeList.length;
 
   function play(episode) {
     // método usado dentro da página de conteúdo de um episódio, ou seja, nossas páginas do [slug].tsx
@@ -84,6 +85,11 @@ export function PlayerContextProvider({
     setIsPlaying(state);
   }
 
+  function clearPlayerState() {
+    setEpisodeList([]);
+    setCurrentEpisodeIndex(0);
+  }
+
   function playNext() {
     if (isShuffling) {
       const nextRandomEpisodeIndex = Math.floor(
@@ -117,6 +123,7 @@ export function PlayerContextProvider({
         toggleLoop,
         toggleShuffle,
         setPlayingState,
+        clearPlayerState,
         playNext,
         playPrevious,
       }}
