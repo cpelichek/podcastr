@@ -1,3 +1,12 @@
+// TODO: 1. Tornar o projeto responsivo, talvez eliminar a table do todos os episódios;
+// TODO: 2. Transformar esse site num PWA (Progressive Web App), assim poderá ser rodado offline e como um app de celular. Para isso existe uma biblioteca chamada next-pwa que facilita essa configuração; O legal de um PWA é que ele permite transformar uma aplicação web em uma aplicação tanto mobile quanto desktop, onde ele tira a carcaça do browser e roda como um aplicativo mesmo, então você consegue converter facilmente a versão web para um app, quando você não quer criar inteiro um aplicativo nativo do zero ou que não tem tanta necessidade disso.
+// TODO: 3. Temas alternativos, por exemplo tema escuro (exemplo de estilo o Omni Theme da rocketseat, pode procurar o repositório do github para ver as configurações, toda a paleta de cores)
+// TODO: 4. Indo mais à fundo, poderia usar o Electron para transformar isto num app desktop, assim eliminando a necessidade de acessar um website para ouvir os podcasts
+// TODO: 5. Quando o shuffle tá habilitado, e clicamos para tocar o episódio anterior, ele escolhe o episódio de forma aleatória, talvez mudar o comportamento do shuffle para uma playListShuffle que seja gerada a cada vez que habilitamos o shuffle, e essa playListShuffle quando existe substitui a playList, algo como (playListShuffle? || playList)
+// TODO: 6. Acrescentar animação para a imagem dos headphones do Player girarem enquanto o aúdio estiver tocando
+// TODO: 7. Substituir o json por algo que seja meu!
+// TODO: 8. Criar um README.md, criar um notion e um whimsical com tudo que vimos neste projeto, para fixar esse conhecimento e poder fazê-lo novamente do começo ao fim
+
 // importações de pacotes externos
 import { GetStaticProps } from "next";
 import Image from "next/image";
