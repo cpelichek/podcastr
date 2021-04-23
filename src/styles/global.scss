@@ -21,6 +21,14 @@
   --purple-800: #6f48c9;
 }
 
+// Corrige erro onde  a página gere uma rolagem horizontal e deixe de exibir as imagens da home para resolução 1366x768, comum em notebooks
+@media (max-width: 1366px) {
+  html {
+    font-size: 80%;
+  }
+}
+/* --------------------------------------- */
+
 @media (max-width: 1080px) {
   html {
     font-size: 93.75%; //15px

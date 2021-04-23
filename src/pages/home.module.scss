@@ -35,6 +35,7 @@
       }
 
       .episodeDetails {
+        width: 1%; // corrige Img diminuída ou nem aparecendo no "card" .latestEpisodes ul li
         flex: 1; // TODO: o que isso faz exatamente? aparentemente uniformiza a width da caixa onde estão os nossos conteúdos de texto, e por isso não está espremendo a largura das nossas imagens, mas é isso mesmo?
         margin-left: 1rem;
 
@@ -115,6 +116,17 @@
     }
   }
 }
+
+/* Config. for Tablet & Mobile */
+@media (max-width: 1220px) {
+  .latestEpisodes {
+    ul {
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(2, 1fr);
+    }
+  }
+}
+/* --------------------------------------- */
 
 .allEpisodes {
   padding: bottom 2rem;
