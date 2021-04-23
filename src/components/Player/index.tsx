@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import Slider from "rc-slider";
 
@@ -7,10 +7,14 @@ import "rc-slider/assets/index.css";
 import { usePlayer } from "../../contexts/PlayerContext";
 
 import styles from "./styles.module.scss";
+import { convertDurationToTimeString } from "../../utils/convertDurationToTimeString";
 
 export function Player() {
   // Para conseguirmos manipular um elemento html de maneira imperativa, no js tradicional usaríamos document.getElementById("id").algumMetodoQueQueremosExecutar ou algo similar. No React, nós fazemos algo parecido com o uso de "Refs", uma referência para aquele elemento que queremos manipular. useRef() quando estamos tratando de criar referências para elementos html uma boa prática é sempre iniciar ela como null, e por estarmos usando typescript podemos tipar o useRef falando qual o tipo de elemento que vamos salvar/armazenar dentro do useRef, e quando estamos usando typescript com HTML todos os elementos HTML estão disponíveis de maneira global, ou seja toda a tipagem dos elementos estão disponíveis de forma global. Dessa forma, quando escrevemos useRef<HTMLAudioElement> , isso irá nos fornecer uma inteligência na hora que formos utilizar essa referência do audio (audioRef) para saber por exemplo que métodos tem lá dentro e o que podemos ou não podemos utilizar
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  // progress será nossa variável que indica o quanto já progredimos na trilha do audio que estamos tocando
+  const [progress, setProgress] = useState(0);
 
   const {
     episodeList,
@@ -44,6 +48,13 @@ export function Player() {
     }
   }, [isPlaying]);
 
+  function setupProgressListener() {
+    audioRef.current.currentTime = 0;
+    audioRef.current.addEventListener("timeupdate", () => {
+      setProgress(Math.floor(audioRef.current.currentTime));
+    });
+  }
+
   const episode = episodeList[currentEpisodeIndex];
 
   return (
@@ -72,7 +83,7 @@ export function Player() {
 
       <footer className={!episode ? styles.empty : ""}>
         <div className={styles.progress}>
-          <span>00:00</span>
+          <span>{convertDurationToTimeString(progress)}</span>
           <div className={styles.slider}>
             {episode ? (
               <Slider
@@ -84,7 +95,8 @@ export function Player() {
               <div className={styles.emptySlider} />
             )}
           </div>
-          <span>00:00</span>
+          {/* episode?.duration significa que verifica se tem episódio, e só se tiver é que acessa a duração do episódio; já o ?? 0 significa que, quando verificar que não tem episódio, passaremos 0 como parâmetro */}
+          <span>{convertDurationToTimeString(episode?.duration ?? 0)}</span>
         </div>
 
         {/* Podemos colocar nossa tag <audio /> em qualquer lugar da nossa aplicação, ela ficará "invisível" no DOM, escolhemos aqui pois assim fica mais próxima dos botões que controlam o que estamos ouvindo */}
@@ -97,6 +109,7 @@ export function Player() {
             loop={isLooping}
             onPlay={() => setPlayingState(true)}
             onPause={() => setPlayingState(false)}
+            onLoadedMetadata={setupProgressListener}
           />
         )}
 
