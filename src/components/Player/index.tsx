@@ -55,6 +55,11 @@ export function Player() {
     });
   }
 
+  function handleSeek(amount: number) {
+    audioRef.current.currentTime = amount;
+    setProgress(amount);
+  }
+
   const episode = episodeList[currentEpisodeIndex];
 
   return (
@@ -89,6 +94,7 @@ export function Player() {
               <Slider
                 max={episode.duration}
                 value={progress}
+                onChange={handleSeek} // essa propriedade controla o que acontece quando o usuário arrasta o handle do slider
                 trackStyle={{ backgroundColor: "#04d361" }}
                 railStyle={{ background: "#9f75ff" }}
                 handleStyle={{ borderColor: "#04d361", borderWidth: 4 }}
