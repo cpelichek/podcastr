@@ -14,11 +14,15 @@ type PlayerContextData = {
   episodeList: Episode[];
   currentEpisodeIndex: number;
   isPlaying: boolean;
+  isLooping: boolean;
+  isShuffling: boolean;
   hasPrevious: boolean;
   hasNext: boolean;
   play: (episode: Episode) => void;
   playList: (list: Episode[], index: number) => void;
   togglePlay: () => void;
+  toggleLoop: () => void;
+  toggleShuffle: () => void;
   setPlayingState: (state: boolean) => void;
   playNext: () => void;
   playPrevious: () => void;
@@ -28,6 +32,7 @@ type PlayerContextData = {
 export const PlayerContext = createContext({} as PlayerContextData);
 
 // Antes o PlayerContext.Provider estava inserido direto no _app.tsx, porém removemos de lá e colocamos aqui pensando que no futuro podemos ter mais de um contexto, por exemplo de autenticação de usuário, e assim é mais fácil de dar manutenção se não deixarmos diferentes contextos com suas variáveis e métodos misturados, e não passamos um value gigante dentro do app pois estamos agora abstraindo isso dentro do próprio contexto que estamos exportando. Tivemos também que alterar a extensão deste arquivo, de .ts para .tsx.
+// Temos que passar um children dentro do PlayerContextProvider pois do contrário a tag seria fechada nela mesma e não poderíamos inserir html dentro. Também acrescentamos essa children, que é do tipo ReactNode, na tipagem do nosso Provider
 type PlayerContextProviderProps = {
   children: ReactNode;
 };
@@ -39,6 +44,8 @@ export function PlayerContextProvider({
   const [episodeList, setEpisodeList] = useState([]);
   const [currentEpisodeIndex, setCurrentEpisodeIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLooping, setIsLooping] = useState(false);
+  const [isShuffling, setIsShuffling] = useState(false);
 
   const hasPrevious = currentEpisodeIndex > 0;
   const hasNext = currentEpisodeIndex + 1 < episodeList.length;
@@ -62,13 +69,28 @@ export function PlayerContextProvider({
     setIsPlaying(!isPlaying);
   }
 
+  function toggleLoop() {
+    // método usado pelo listener onClick do <button> repetir
+    setIsLooping(!isLooping);
+  }
+
+  function toggleShuffle() {
+    // método usado pelo listener onClick do <button> embaralhar
+    setIsShuffling(!isShuffling);
+  }
+
   function setPlayingState(state: boolean) {
     // método usado pelos listener onPlay e onPause do <audio>, que podem ser acessados por atalho de teclado
     setIsPlaying(state);
   }
 
   function playNext() {
-    if (hasNext) {
+    if (isShuffling) {
+      const nextRandomEpisodeIndex = Math.floor(
+        Math.random() * episodeList.length
+      );
+      setCurrentEpisodeIndex(nextRandomEpisodeIndex);
+    } else if (hasNext) {
       setCurrentEpisodeIndex(currentEpisodeIndex + 1);
     }
   }
@@ -85,11 +107,15 @@ export function PlayerContextProvider({
         episodeList,
         currentEpisodeIndex,
         isPlaying,
+        isLooping,
+        isShuffling,
         hasPrevious,
         hasNext,
         play,
         playList,
         togglePlay,
+        toggleLoop,
+        toggleShuffle,
         setPlayingState,
         playNext,
         playPrevious,
